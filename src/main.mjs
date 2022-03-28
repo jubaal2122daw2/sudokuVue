@@ -1,68 +1,26 @@
+//en este script se van a llamar a los componentes. Y será eñ menu lateral.
+
 import { Tablero } from "./clases.mjs";
+import {TableroComponent} from "./components/tablero-component.js";
 
-const error = {
-  data: function() {
-    return {
-      url: window.location.hash
-    };
-  },
-  template: `
-  <div>
-    <p>URL no encaminada : {{url}} </p>
-  </div>
-  `
-};
 
-const principal = {
-  template: `
-    <p>Benvinguts a Vue.js</p>
-  `
-};
-const contacte = {
-  template: `
-    <p>sergi.grau@fje.edu</p>
-  `
-};
-
-const rutes = {
-  '#/': principal,
-  '#/contacte': contacte
-};
-
-var app = new Vue({
+let app = new Vue({
   el: '#app',
   data: {
-    rutaActual: window.location.hash,
-    rutes: rutes
+    prueba: 'hola'
   },
-  methods: {
-    navegar: function($event) {
-      this.rutaActual = $event.target.hash;
-    }
+  components: {
+    TableroComponent
   },
-  computed: {
-    vistaActual: function() {
-      return this.rutes[this.rutaActual] || error;
-    }
-  },
+  
   template: `
-    <div>
-      <ul>
-        <li>
-          <a href="#/" 
-            v-on:click="navegar">
-              Principal
-          </a>
-        </li>
-        <li>
-          <a href="#/contacte" 
-            v-on:click="navegar">
-              Contacte
-          </a>
-        </li>
-      </ul>
-      <div v-bind:is="vistaActual">        
-      </div>
-    </div>
-    `
+  <div>
+    <h1>{{prueba}}</h1>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    v-on:click="generarTablero">
+      Generar Tablero
+    </button>
+    <TableroComponent></TableroComponent>
+  </div>
+  `
 });
