@@ -3,7 +3,7 @@
 //import { Tablero } from "./clases.mjs";
 //import {TableroComponent} from "./components/tablero-component.js";
 
-let sudoku = [
+let sudokuResuelto = [
   [5,3,4,6,7,8,9,1,2],
   [6,7,2,1,9,5,3,4,8],
   [1,9,8,3,4,2,5,6,7],
@@ -13,29 +13,61 @@ let sudoku = [
   [9,6,1,5,3,7,2,8,4],
   [2,8,7,4,1,9,6,3,5],
   [3,4,5,2,8,6,1,7,9]
-]
+];
+
+let contador = 20;
+
+let copia = JSON.parse(JSON.stringify(sudokuResuelto));
+
+while (true){
+  for(let i = 0; i<copia.length;i++){
+    for(let j = 0; j<copia[i].length; j++){
+      if(numerosRandom(1,5) == 3){
+        copia[i][j] = 'vacio';
+        contador--;
+      }
+    }
+  }
+  if(contador <= 0){
+    break;
+  }
+}
+
+console.table(sudokuResuelto);
+console.table(copia);
+
+
+
+function numerosRandom(min, max){
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+//v-show="fila!='vacio'"
+
+Vue.component('CeldaComponent',{
+  //Aqui tienen que ir los inputs de solo los numeros random que no se muestran
+  props: ['celda'],
+  template: `
+    <td>
+      <input type="text" maxlength="1" pattern="[1-9]{1}" v-if="celda =='vacio'"/>
+      <span v-else>{{celda}}</span>
+    </td>
+  `
+});
 
 Vue.component('FilaComponent',{
   props: ['fila'],
   template: `
     <tr>
-      <td>{{fila[0]}}</td>
-      <td>{{fila[1]}}</td>
-      <td>{{fila[2]}}</td>
-      <td>{{fila[3]}}</td>
-      <td>{{fila[4]}}</td>
-      <td>{{fila[5]}}</td>
-      <td>{{fila[6]}}</td>
-      <td>{{fila[7]}}</td>
-      <td>{{fila[8]}}</td>
-   </tr>
+      <CeldaComponent v-for='valor in fila' v-bind:celda='valor'/>
+    </tr>
   `
 });
 
 Vue.component('TableroComponent', {
   data: function(){
     return {
-      sudoku: sudoku
+      sudoku: copia
     };
   },
   template: `
@@ -47,16 +79,10 @@ Vue.component('TableroComponent', {
 let app = new Vue({
   el: '#app',
   data: {
-    prueba: 'hola'
   },
   template: `
   <div>
-    <h1>{{prueba}}</h1>
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    v-on:click="generarTablero">
-      Generar Tablero
-    </button>
-    <TableroComponent></TableroComponent>
+    <TableroComponent class="tablero"></TableroComponent>
   </div>
   `
 });
