@@ -1,9 +1,7 @@
-///clase de dificultades
-
 class Dificultad{
-    static facil = new Dificultad("facil");
-    static medio = new Dificultad("medio");
-    static dificil = new Dificultad("dificil");
+    static facil = new Dificultad("facil", 20);
+    static medio = new Dificultad("medio", 40);
+    static dificil = new Dificultad("dificil", 60);
 
     constructor(name, valor){
         this.name = name;
@@ -14,9 +12,6 @@ class Dificultad{
         return this.name;
     }
 }
-
-//clase sudoku
-
 class Tablero{
 
     dificultad = Dificultad;
