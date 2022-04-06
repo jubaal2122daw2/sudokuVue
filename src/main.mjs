@@ -30,44 +30,6 @@ function numerosRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const error = {
-  data: function() {
-    return {
-      url: window.location.hash
-    };
-  },
-  template: `
-  <div>
-    <p>URL no encaminada : {{url}} </p>
-  </div>
-  `
-};
-
-const comojugar = {
-  template: `
-    <p>Cómo jugar</p>
-  `
-};
-const menusudoku = {
-  template: `
-  <div>
-    <TableroComponent class="tablero"></TableroComponent>
-  </div>
-  `
-};
-const puntuacion = {
-  template: `
-  <h1>Puntuacion</h1>
-  `
-};
-
-const rutes = {
-  '': comojugar,
-  '#/': comojugar,
-  '#/sudoku': menusudoku,
-  '#/puntuacion': puntuacion
-};
-
 Vue.component('CeldaComponent', {
   props: ['celda'],
   data: function () {
@@ -114,54 +76,39 @@ Vue.component('TableroComponent', {
   </table>`
 });
 
-let app = new Vue({
-  el: '#app',
-  data: {
-    rutaActual: window.location.hash,
-    rutes: rutes
-  },
-  methods: {
-    navegar: function ($event) {
-      this.rutaActual = $event.target.hash //!= undefined ? $event.target.hash: this.rutaActual; //revisar por qué se queda bug.
-      console.log(this.rutaActual)
-    }
-  },
-  computed: {
-    vistaActual: function () {
-      return this.rutes[this.rutaActual] || error;
-    }
-  },
+/*MIRAR DE PONER LAS RUTAS EN OTRO FILE CUANDO FUNCIONEN */
+
+const comojugar = {
+  template: `
+    <p>Cómo jugar</p>
+  `
+};
+const menusudoku = {
   template: `
   <div>
-    <aside class="w-64" aria-label="Sidebar">
-      <div class="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
-          <ul class="space-y-2">
-            <li>
-                <a href="#/" v-on:click="navegar" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
-                  <span class="ml-3">Cómo jugar</span>
-                </a>
-            </li>
-            <li>
-              <a href="#/sudoku" v-on:click="navegar" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
-                <span class="ml-3">Sudoku</span>
-              </a>
-            </li>
-            <li>
-            <a href="#/puntuacion" v-on:click="navegar" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
-              <span class="ml-3">Puntuación</span>
-            </a>
-            </li>
-          </ul>
-      </div>
-    </aside>
-    <div v-bind:is="vistaActual">    
-    </div>
-
+    <TableroComponent class="tablero"></TableroComponent>
   </div>
   `
+};
+const puntuacion = {
+  template: `
+  <h1>Puntuacion</h1>
+  `
+};
+
+const routes = [
+  { path: '/comojugar', component: comojugar },
+  { path: '/menusudoku', component: menusudoku },
+  { path: '/puntuacion', component: puntuacion },
+];
+
+const router = new VueRouter({
+  routes 
+})
+
+let app = new Vue({
+  el: '#app',
+  router
 });
 
 export {app};

@@ -11,13 +11,50 @@
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> <!--necesario para hacer el modular funcione -->
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-    <script type="module" src="/src/main.mjs"></script>
-    <div id="app"></div>
-
-
+    <div id="app">
+        <aside class="w-64" aria-label="Sidebar">
+            <div class="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
+                <ul class="space-y-2">
+                    <li>
+                        <a class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                            </svg>
+                            <router-link class="ml-3" to="/comojugar">Como jugar</router-link>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                            </svg>
+                            <router-link class="ml-3" to="/menusudoku">Jugar Sudoku</router-link>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                            </svg>
+                            <router-link class="ml-3" to="/puntuacion">Puntuación</router-link>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <router-view></router-view>
+    </div>
+        <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+        <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
+        <!--necesario para hacer el modular funcione -->
+        <script type="module" src="/src/main.mjs"></script>
 </body>
 
 </html>
