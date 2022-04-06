@@ -30,6 +30,19 @@ function numerosRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+const error = {
+  data: function() {
+    return {
+      url: window.location.hash
+    };
+  },
+  template: `
+  <div>
+    <p>URL no encaminada : {{url}} </p>
+  </div>
+  `
+};
+
 const comojugar = {
   template: `
     <p>Cómo jugar</p>
@@ -109,13 +122,13 @@ let app = new Vue({
   },
   methods: {
     navegar: function ($event) {
-      this.rutaActual = $event.target.hash != undefined ? $event.target.hash: this.rutaActual; //revisar por qué se queda bug.
+      this.rutaActual = $event.target.hash //!= undefined ? $event.target.hash: this.rutaActual; //revisar por qué se queda bug.
       console.log(this.rutaActual)
     }
   },
   computed: {
     vistaActual: function () {
-      return this.rutes[this.rutaActual];
+      return this.rutes[this.rutaActual] || error;
     }
   },
   template: `
@@ -145,7 +158,6 @@ let app = new Vue({
       </div>
     </aside>
     <div v-bind:is="vistaActual">    
-     
     </div>
 
   </div>
