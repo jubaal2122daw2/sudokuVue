@@ -5,12 +5,13 @@ import { Dificultad, Sudoku } from "./clases.mjs";
 
 let sudokuRandom = Sudoku.eleccionSudokuRandom();
 //var contador = 0; //donde pone facil ira una variable que es la que se clicka en el menú
-let copia = JSON.parse(JSON.stringify(sudokuRandom)); //la unica forma de copiar la matriz sin que copie tambien los campos.
-
-function establecerDificultad(evento, tiposudoku){
+ //la unica forma de copiar la matriz sin que copie tambien los campos.
+let copia = '';
+function establecerDificultad(evento){
   console.log(evento.target.value)
   this.tablero = !this.tablero;
   let contador = 0;
+  copia = JSON.parse(JSON.stringify(sudokuRandom));
   let dif = evento.target.value;
   let facil = new Dificultad("facil", 20);
   let medio = new Dificultad("medio", 40);
@@ -18,20 +19,20 @@ function establecerDificultad(evento, tiposudoku){
   switch(dif){
     case 'facil':
       contador = facil.getValorDificultad();
-      generarSudoku(contador);
+      generarSudoku(contador,copia);
       break;
     case 'medio':
       contador = medio.getValorDificultad();
-      generarSudoku(contador);
+      generarSudoku(contador,copia);
       break;
     case 'dificil':
       contador = dificil.getValorDificultad();
-      generarSudoku(contador);
+      generarSudoku(contador,copia);
       break;
   }
 }
 
-function generarSudoku(contador){
+function generarSudoku(contador, copia){
   while (true) {
     for (let i = 0; i < copia.length; i++) {
       for (let j = 0; j < copia[i].length; j++) {

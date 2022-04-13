@@ -20,6 +20,7 @@ const menusudoku = {
       return {
         nombre: "",
         dificultad: 0,
+        tablero: false,
       };
     },
     methods: {
@@ -27,6 +28,11 @@ const menusudoku = {
       registrarNombre: function () {
         this.nombre = document.getElementById("nombre").value;
         console.log(this.nombre);
+      },
+      reload: function () {
+        if(this.tablero ==false){
+          window.location.reload();
+        }
       },
       console: function () {
         console.log(this.dificultad);
@@ -43,17 +49,17 @@ const menusudoku = {
         <div class="flex justify-center">
           <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
           value="facil"
-          v-on:click="establecerDificultad($event);dificultad=1;console()">
+          v-on:click="establecerDificultad($event);dificultad=1;reload()">
             Fácil
           </button>
           <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
           value="medio"
-          v-on:click="establecerDificultad($event);dificultad=2">
+          v-on:click="establecerDificultad($event);dificultad=2;reload()">
             Medio
           </button>
           <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
           value="dificil"
-          v-on:click="establecerDificultad($event);dificultad=3">
+          v-on:click="establecerDificultad($event);dificultad=3,reload()">
             Difícil
           </button>
         </div>
