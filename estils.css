@@ -20,20 +20,7 @@ td input {
     outline: none;
     /* caret-color: transparent; */
     text-align: center;
-}
-
-/*ESCONDER ARROWS*/
-
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+    background-color: transparent;
 }
 
 td:nth-of-type(3n) {
@@ -42,4 +29,16 @@ td:nth-of-type(3n) {
 
 tr:nth-of-type(3n) td {
     border-bottom: 3px solid black;
+}
+
+.error{
+    background-color: red;
+}
+
+.acierto {
+    background-color: green;
+}
+
+.neutro {
+    background-color: white;
 }

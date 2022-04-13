@@ -21,11 +21,11 @@ while (true) {
   }
 }
 
-// console.table(sudokuRandom);
-// console.table(copia);
+console.table(sudokuRandom);
+console.table(copia);
 
 function numerosRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export {copia};
+export {copia, sudokuRandom};

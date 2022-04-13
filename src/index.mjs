@@ -3,38 +3,50 @@
 */
 
 import {router} from "./rutas.mjs";
-import {copia} from "./main.mjs";
+import {copia, sudokuRandom} from "./main.mjs";
 
 Vue.component('CeldaComponent', {
-  props: ['celda'],
+  props: ['celda','x','y'],
   data: function () {
     return {
-      valor: ''
+      valorInput: '',
+      valorCorrecto: 'neutro',
     };
   },
   watch: { //mira al v-model y aplica los cambios antes de darle valor a la variable
-    valor: function (val) { //tiene que tener el mismo nomnre que la variable en data
+    valorInput: function (val) { //tiene que tener el mismo nombre que la variable en data
       let regex = new RegExp('[1-9]{1}');
       if (regex.test(val)) {
-        this.valor = val.match(regex)[0];
+        this.valorInput = val.match(regex)[0];
+        this.compararSudokus(this.valorInput);
       } else {
-        this.valor = '';
+        this.valorInput = '';
+        this.valorCorrecto = 'neutro';
+      }
+    }
+  },
+  methods:{
+    compararSudokus: function(valor){
+      if (valor == sudokuRandom[this.y][this.x]) {
+        this.valorCorrecto = 'acierto';
+      } else {
+        this.valorCorrecto = 'error';
       }
     }
   },
   template: `
-    <td>
-      <input type="text" maxlength="1" v-model='valor' v-if="celda =='vacio'"/>
+    <td v-bind:class="{ acierto:valorCorrecto=='acierto', error: valorCorrecto=='error', neutro: valorCorrecto=='neutro'}">
+      <input type="text" maxlength="1" v-model='valorInput' v-if="celda =='vacio'" />
       <span v-else>{{celda}}</span>
     </td>
   `
 });
 
 Vue.component('FilaComponent', {
-  props: ['fila'],
+  props: ['fila','y'],
   template: `
     <tr>
-      <CeldaComponent v-for='index in 9' :key="index" v-bind:celda='fila[index-1]'/>
+      <CeldaComponent v-for='index in 9' :key="index" v-bind:celda='fila[index-1]' v-bind:x='[index-1]' v-bind:y=y />
     </tr>
   `
 });
@@ -42,12 +54,12 @@ Vue.component('FilaComponent', {
 Vue.component('TableroComponent', {
   data: function () {
     return {
-      sudoku: copia
+      sudoku: copia,
     };
   },
   template: `
   <table>
-      <FilaComponent v-for='index in 9' :key=index v-bind:fila='sudoku[index-1]'/>
+      <FilaComponent v-for='index in 9' :key=index v-bind:fila='sudoku[index-1]' v-bind:y='[index-1]'/>
   </table>`
 });
 
