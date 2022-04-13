@@ -4,12 +4,13 @@
 import { Dificultad, Sudoku } from "./clases.mjs";
 
 let sudokuRandom = Sudoku.eleccionSudokuRandom();
-var contador = 0; //donde pone facil ira una variable que es la que se clicka en el menú
+//var contador = 0; //donde pone facil ira una variable que es la que se clicka en el menú
 let copia = JSON.parse(JSON.stringify(sudokuRandom)); //la unica forma de copiar la matriz sin que copie tambien los campos.
 
-function establecerDificultad(evento){
+function establecerDificultad(evento, tiposudoku){
   console.log(evento.target.value)
   this.tablero = !this.tablero;
+  let contador = 0;
   let dif = evento.target.value;
   let facil = new Dificultad("facil", 20);
   let medio = new Dificultad("medio", 40);
@@ -17,32 +18,39 @@ function establecerDificultad(evento){
   switch(dif){
     case 'facil':
       contador = facil.getValorDificultad();
+      generarSudoku(contador);
       break;
     case 'medio':
       contador = medio.getValorDificultad();
+      generarSudoku(contador);
       break;
     case 'dificil':
       contador = dificil.getValorDificultad();
+      generarSudoku(contador);
       break;
   }
 }
 
-while (true) {
-  for (let i = 0; i < copia.length; i++) {
-    for (let j = 0; j < copia[i].length; j++) {
-      if (numerosRandom(1, 5) == 3) {
-        copia[i][j] = 'vacio';
-        contador--;
+function generarSudoku(contador){
+  while (true) {
+    for (let i = 0; i < copia.length; i++) {
+      for (let j = 0; j < copia[i].length; j++) {
+        if (numerosRandom(1, 5) == 3) {
+          copia[i][j] = 'vacio';
+          contador--;
+        }
       }
     }
-  }
-  if (contador <= 0) {
-    break;
+    if (contador <= 0) {
+      break;
+    }
   }
 }
 
-console.table(sudokuRandom);
-console.table(copia);
+
+
+// console.table(sudokuRandom);
+// console.table(copia);
 
 function numerosRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
