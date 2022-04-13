@@ -42,3 +42,13 @@ tr:nth-of-type(3n) td {
 .neutro {
     background-color: white;
 }
+/*TRANSICION*/
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}

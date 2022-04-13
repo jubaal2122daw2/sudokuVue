@@ -5,6 +5,10 @@
 import {router} from "./rutas.mjs";
 import {copia, sudokuRandom} from "./main.mjs";
 
+/**
+ * Componentes de sudoku: CeldaComponent, TableroComponent, FilaComponent
+ */
+
 Vue.component('CeldaComponent', {
   props: ['celda','x','y'],
   data: function () {
@@ -62,6 +66,8 @@ Vue.component('TableroComponent', {
       <FilaComponent v-for='index in 9' :key=index v-bind:fila='sudoku[index-1]' v-bind:y='[index-1]'/>
   </table>`
 });
+
+
 
 let app = new Vue({
   el: '#app',
