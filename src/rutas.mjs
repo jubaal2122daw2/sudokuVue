@@ -36,6 +36,13 @@ const menusudoku = {
       },
       console: function () {
         console.log(this.dificultad);
+      },
+      hacerInterval: function () {
+        let time = 0;
+        setInterval(function () {
+          time++;
+          document.getElementById("tiempo").innerHTML = `Tiempo: ${time}`;
+        }, 1000);
       }
     },
     template: `
@@ -49,7 +56,7 @@ const menusudoku = {
         <div class="flex justify-center">
           <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
           value="facil"
-          v-on:click="establecerDificultad($event);dificultad=1;reload()">
+          v-on:click="establecerDificultad($event);dificultad=1;reload();hacerInterval()">
             Fácil
           </button>
           <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
@@ -67,6 +74,9 @@ const menusudoku = {
           <TableroComponent v-if="dificultad==1" class="tablero"></TableroComponent>
           <TableroComponent v-if="dificultad==2" class="tablero"></TableroComponent>
           <TableroComponent v-if="dificultad==3" class="tablero"></TableroComponent>
+        </div>
+        <div class="flex justify-center ">
+          <p id="tiempo"></p>
         </div>
       </div>
     `
