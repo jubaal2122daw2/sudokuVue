@@ -35,17 +35,16 @@ let sudokuResuelto3 = [
 ];
 
 class Dificultad{
-    static facil = new Dificultad("facil", 20);
-    static medio = new Dificultad("medio", 40);
-    static dificil = new Dificultad("dificil", 60);
 
     constructor(name, valor){
         this.name = name;
         this.valor = valor;
     }
-
     getValorDificultad(){
         return this.valor;
+    }
+    getNamerDificultad(){
+        return this.name;
     }
 }
 
