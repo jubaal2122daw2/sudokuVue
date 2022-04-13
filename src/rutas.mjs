@@ -1,7 +1,7 @@
 /*
  * Rutas de la aplicación
  */
-import { establecerDificultad } from "./main.mjs";
+import { establecerDificultad, sudokuRandom, copia } from "./main.mjs";
 
 const comojugar = {
     template: `
@@ -21,6 +21,7 @@ const menusudoku = {
         nombre: "",
         dificultad: 0,
         tablero: false,
+        tiempo: false,
       };
     },
     methods: {
@@ -39,10 +40,17 @@ const menusudoku = {
       },
       hacerInterval: function () {
         let time = 0;
-        setInterval(function () {
+        const interval = setInterval(function () {
           time++;
           document.getElementById("tiempo").innerHTML = `Tiempo: ${time}`;
         }, 1000);
+        if(this.tiempo==true){
+          clearInterval(interval);
+        }
+      },
+      pararContador: function () {
+        console.log("parar");
+        this.tiempo = true;
       }
     },
     template: `
@@ -78,6 +86,8 @@ const menusudoku = {
         <div class="flex justify-center ">
           <p id="tiempo"></p>
         </div>
+        <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+        v-on:click="pararContador()">botondemierda</button>
       </div>
     `
 };

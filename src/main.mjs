@@ -51,8 +51,29 @@ function numerosRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// console.table(sudokuRandom);
-// console.table(copia);
+function recogerPuntuacion(sudokuRandom, copia){
+  if(sudokuRandom === copia){
+    console.log("es igual")
+    // contarPuntuacion(tiempo);
+  }else{
+    console.log("es diferente");
+  }
+}
+
+function contarPuntuacion(tiempo){
+  //aqui la logica del indexed.
+  if(tiempo <= 480){
+    console.log("es bueno")
+  }
+  else if (tiempo > 480 && tiempo <= 960){
+    console.log("es regular")
+  }
+  else if (tiempo > 960){
+    console.log("es malo")
+  }
+}
+
+console.table(sudokuRandom);
 
 
 /*crear constante indexed DB
@@ -98,4 +119,4 @@ let almacen = {
 }
 window.onload = function() {almacen.guardarSudoku()};
 
-export {copia, sudokuRandom, establecerDificultad};
+export {copia, sudokuRandom, establecerDificultad, recogerPuntuacion};
