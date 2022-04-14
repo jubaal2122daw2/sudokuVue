@@ -4,7 +4,7 @@
 import { establecerDificultad, sudokuRandom, copia } from "./main.mjs";
 
 const comojugar = {
-    template: `
+  template: `
       <div class="h-full bg-rose-200 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
         <h1 class="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">Instrucciones de juego</h1>
         <p class="leading-relaxed">El juego consiste en completar todos los recuadros blancos mediante números del 1 al 9</p>
@@ -16,83 +16,86 @@ const comojugar = {
     `
 };
 const menusudoku = {
-    data: function () {
-      return {
-        nombre: "",
-        dificultad: 0,
-        tablero: false,
-        tiempo: false,
-      };
+  data: function () {
+    return {
+      nombre: "",
+      guardado: false,
+      dificultad: 0,
+      tablero: false,
+      interval: null
+    };
+  },
+  methods: {
+    establecerDificultad: establecerDificultad,
+    registrarNombre: function () {
+      this.nombre = document.getElementById("nombre").value;
+      this.guardado=true;
+      console.log(this.nombre);
     },
-    methods: {
-      establecerDificultad: establecerDificultad,
-      registrarNombre: function () {
-        this.nombre = document.getElementById("nombre").value;
-        console.log(this.nombre);
-      },
-      reload: function () {
-        if(this.tablero ==false){
-          window.location.reload();
-        }
-      },
-      console: function () {
-        console.log(this.dificultad);
-      },
-      hacerInterval: function () {
+    reload: function () {
+      if (this.tablero == false) {
+        window.location.reload();
+      }
+    },
+    // console: function () {
+    //   console.log(this.dificultad);
+    // },
+    hacerInterval: function () {
+      if(this.interval == null){
         let time = 0;
-        const interval = setInterval(function () {
+        this.interval = setInterval(function () {
           time++;
           document.getElementById("tiempo").innerHTML = `Tiempo: ${time}`;
         }, 1000);
-        if(this.tiempo==true){
-          clearInterval(interval);
-        }
-      },
-      pararContador: function () {
-        console.log("parar");
-        this.tiempo = true;
+      }else{
+        clearInterval(this.interval);
+        this.interval = null;
       }
+      console.log("interval: -> ", this.interval);
     },
-    template: `
-      <div class="flex-col grid gap-10">
+  },
+  template: `
+      <div class="flex-col grid gap-6">
         <div class="flex justify-center">
           <label>Nombre :</label>
-          <input id="nombre" class="shadow appearance-none border rounded ml-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text">
-          <button class="bg-white ml-3 py-1 px-1 hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow dificultad"
-          v-on:click="registrarNombre">Guardar</button>
-          </div>
+          <input id="nombre" placeholder="   Introduce tu nombre" type="text"
+            class="shadow appearance-none border rounded ml-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <button class="bg-white ml-3 py-1 px-1 hover:bg-gray-100 text-gray-800 font-semibold border border-rose-400 rounded shadow dificultad"
+            v-on:click="registrarNombre">Guardar</button>
+        </div>
+        <p class="justify-self-center -mt-4 -mb-4" v-show="guardado==true"> Hola {{nombre}}</p>
         <div class="flex justify-center">
-          <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
+          <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-rose-400 rounded shadow dificultad"
           value="facil"
-          v-on:click="establecerDificultad($event);dificultad=1;reload();hacerInterval()">
+          v-on:click="establecerDificultad($event);dificultad=1;reload()">
             Fácil
           </button>
-          <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
+          <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-rose-400 rounded shadow dificultad"
           value="medio"
           v-on:click="establecerDificultad($event);dificultad=2;reload()">
             Medio
           </button>
-          <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow dificultad"
+          <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-rose-400 rounded shadow dificultad"
           value="dificil"
           v-on:click="establecerDificultad($event);dificultad=3,reload()">
             Difícil
           </button>
         </div>
-        <div class="flex justify-center ">
+        <div class="flex justify-center">
           <TableroComponent v-if="dificultad==1" class="tablero"></TableroComponent>
           <TableroComponent v-if="dificultad==2" class="tablero"></TableroComponent>
           <TableroComponent v-if="dificultad==3" class="tablero"></TableroComponent>
         </div>
-        <div class="flex justify-center ">
-          <p id="tiempo"></p>
+        <div class="flex flex-row justify-center gap-8 items-center">
+          <p class="" id="tiempo"></p>
+          <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-rose-400 rounded shadow w-48"
+            v-on:click="hacerInterval()">Play/Pause Time</button>
         </div>
-        <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        v-on:click="pararContador()">botondemierda</button>
       </div>
     `
 };
 const puntuacion = {
-    template: `
+  template: `
     <table>
       <tr>
         <th>Nombre</th>
@@ -107,14 +110,14 @@ const puntuacion = {
 };
 
 const routes = [
-    { path: '/', component: comojugar },
-    { path: '/comojugar', component: comojugar },
-    { path: '/menusudoku', component: menusudoku },
-    { path: '/puntuacion', component: puntuacion },
+  { path: '/', component: comojugar },
+  { path: '/comojugar', component: comojugar },
+  { path: '/menusudoku', component: menusudoku },
+  { path: '/puntuacion', component: puntuacion },
 ];
 
 const router = new VueRouter({
-    routes
+  routes
 })
 
-export {router};
+export { router };
