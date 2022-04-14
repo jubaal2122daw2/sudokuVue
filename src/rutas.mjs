@@ -3,6 +3,15 @@
  */
 import { establecerDificultad, sudokuRandom, copia } from "./main.mjs";
 
+let tiempo = 0;
+
+let puntuaciones = [
+  {
+    nombre: "",
+    puntuacion: 0,
+  }
+];
+
 const comojugar = {
   template: `
       <div class="h-full bg-rose-200 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
@@ -22,15 +31,16 @@ const menusudoku = {
       guardado: false,
       dificultad: 0,
       tablero: false,
-      interval: null
+      interval: null,
+      mostrarpuntuacion:false,
     };
   },
   methods: {
     establecerDificultad: establecerDificultad,
     registrarNombre: function () {
       this.nombre = document.getElementById("nombre").value;
+      // puntuaciones.push({nombre: this.nombre, puntuacion: this.interval});
       this.guardado=true;
-      console.log(this.nombre);
     },
     reload: function () {
       if (this.tablero == false) {
@@ -41,15 +51,21 @@ const menusudoku = {
     //   console.log(this.dificultad);
     // },
     hacerInterval: function () {
+      this.mostrarpuntuacion = false;
       if(this.interval == null){
-        let time = 0;
         this.interval = setInterval(function () {
-          time++;
-          document.getElementById("tiempo").innerHTML = `Tiempo: ${time}`;
+          tiempo++;
+          console.log(tiempo);
+          document.getElementById("tiempo").innerHTML = `Tiempo: ${tiempo}`;
         }, 1000);
       }else{
+        this.mostrarpuntuacion = !this.mostrarpuntuacion;
+        puntuaciones.push({nombre: this.nombre, puntuacion: tiempo});
         clearInterval(this.interval);
+        console.log("PUNTUACIONES",puntuaciones);
         this.interval = null;
+        tiempo = 0;
+        
       }
       console.log("interval: -> ", this.interval);
     },
@@ -90,6 +106,7 @@ const menusudoku = {
           <p class="" id="tiempo"></p>
           <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-rose-400 rounded shadow w-48"
             v-on:click="hacerInterval()">Play/Pause Time</button>
+            <p v-show="mostrarpuntuacion==true">Se ha registrado tu puntuación</p>
         </div>
       </div>
     `
