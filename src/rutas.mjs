@@ -12,6 +12,8 @@ let puntuaciones = [
   }
 ];
 
+let dbpuntuaciones=[{}];
+
 const comojugar = {
   template: `
       <div class="h-full bg-rose-200 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
@@ -32,7 +34,7 @@ const menusudoku = {
       dificultad: 0,
       tablero: false,
       interval: null,
-      mostrarpuntuacion:false,
+      mostrarpuntuacion: false,
     };
   },
   methods: {
@@ -40,7 +42,7 @@ const menusudoku = {
     registrarNombre: function () {
       this.nombre = document.getElementById("nombre").value;
       // puntuaciones.push({nombre: this.nombre, puntuacion: this.interval});
-      this.guardado=true;
+      this.guardado = true;
     },
     reload: function () {
       if (this.tablero == false) {
@@ -52,20 +54,21 @@ const menusudoku = {
     // },
     hacerInterval: function () {
       this.mostrarpuntuacion = false;
-      if(this.interval == null){
+      if (this.interval == null) {
         this.interval = setInterval(function () {
           tiempo++;
           document.getElementById("tiempo").innerHTML = `Tiempo: ${tiempo}`;
         }, 1000);
-      }else{
+      } else {
         this.mostrarpuntuacion = !this.mostrarpuntuacion;
-        puntuaciones.push({nombre: this.nombre, puntuacion: tiempo});
-        almacen.desar(puntuaciones);
+        puntuaciones.push({ nombre: this.nombre, puntuacion: tiempo });
+        // almacen.desar(puntuaciones);
+        almacen.guardarPuntuacion(puntuaciones);
         clearInterval(this.interval);
         //console.log("PUNTUACIONES",puntuaciones);
         this.interval = null;
         tiempo = 0;
-        
+
       }
     },
   },
@@ -111,6 +114,11 @@ const menusudoku = {
     `
 };
 const puntuacion = {
+  data: function () {
+    return {
+      puntuaciones: dbpuntuaciones,
+    };
+  },
   template: `
     <table>
       <tr>
@@ -136,59 +144,75 @@ const router = new VueRouter({
   routes
 })
 
-
-/**
- * INDEXED
- */
-
-let db;
-
 let almacen = {
-  desar: function(objeto) { 
-      var objectStore = db.transaction("Puntuaciones", "readwrite").objectStore("Puntuaciones");
-      objectStore.add(objeto);
-      almacen.mostrar(objectStore);
-  },
-  mostrar: function(objectStore){
-      objectStore.onsuccess = (e) => {
-          console.log("Puntuación: " + objectStore.result.nombre);
+    guardarPuntuacion: (puntuaciones) => {
+      for (let i in puntuaciones) {
+        localStorage.setItem(i, JSON.stringify(puntuaciones[i]));
+        //dbpuntuaciones.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
       }
-  }
-}
-
-const DB_VERSION = 5;
-
-if (!window.indexedDB) {
-  window.alert("Su navegador no soporta una versión estable de indexedDB. Tal y como las características no serán validas");
-}
-
-let request = indexedDB.open("Sudoku", DB_VERSION);
-  
-request.onerror = function(event) {
-  alert("¡Problema!");
-};
-
-request.onsuccess = (e) =>{
-  db = e.target.result;
-}
-
-request.onupgradeneeded = function(event) {
-  let db = event.target.result;
-  try {
-      db.deleteObjectStore("Puntuaciones");
-  }
-  catch (e) {
-
-  }
-
-  let objectStore = db.createObjectStore("Puntuaciones", { autoIncrement : true });
-
-  objectStore.transaction.oncomplete = function(event) {
-    // Guarda los datos en el almacén recién creado.
-    for (let i in puntuaciones) {
-      objectStore.add(puntuaciones[i]);
+      //almacen.mostrar();
+    },
+    mostrar: () => {
+      for (var i = 0; i < localStorage.length; i++) {
+        localStorage.key(i);
+        localStorage.getItem(localStorage.key(i));
+        dbpuntuaciones.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+      };
+      console.log(dbpuntuaciones);
     }
   }
-};
+  //window.onload = function() {almacen.guardarPuntuacion()};
 
-export { router };
+// /**
+//  * INDEXED
+//  */
+//let db;
+// let almacen = {
+//   desar: function (objeto) {
+//     var objectStore = db.transaction("Puntuaciones", "readwrite").objectStore("Puntuaciones");
+//     objectStore.add(objeto);
+//     almacen.mostrar(objectStore);
+//   },
+//   mostrar: function (objectStore) {
+//     objectStore.onsuccess = (e) => {
+//       console.log("Puntuación: " + objectStore.result.nombre);
+//     }
+//   }
+// }
+
+// const DB_VERSION = 5;
+
+// if (!window.indexedDB) {
+//   window.alert("Su navegador no soporta una versión estable de indexedDB. Tal y como las características no serán validas");
+// }
+
+// let request = indexedDB.open("Sudoku", DB_VERSION);
+
+// request.onerror = function (event) {
+//   alert("¡Problema!");
+// };
+
+// request.onsuccess = (e) => {
+//   db = e.target.result;
+// }
+
+// request.onupgradeneeded = function (event) {
+//   let db = event.target.result;
+//   try {
+//     db.deleteObjectStore("Puntuaciones");
+//   }
+//   catch (e) {
+
+//   }
+
+//   let objectStore = db.createObjectStore("Puntuaciones", { autoIncrement: true });
+
+//   objectStore.transaction.oncomplete = function (event) {
+//     // Guarda los datos en el almacén recién creado.
+//     for (let i in puntuaciones) {
+//       objectStore.add(puntuaciones[i]);
+//     }
+//   }
+// };
+
+export { router, almacen };

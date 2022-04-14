@@ -2,7 +2,7 @@
 * Contiene los componentes de la interfaz gráfica
 */
 
-import {router} from "./rutas.mjs";
+import {router,almacen} from "./rutas.mjs";
 import {copia, sudokuRandom,recogerPuntuacion} from "./main.mjs";
 
 /**
@@ -84,7 +84,10 @@ Vue.component('TableroComponent', {
 
 let app = new Vue({
   el: '#app',
-  router
+  router,
+  mounted: function () {
+    almacen.mostrar();
+  },
 });
 
 export {app};
