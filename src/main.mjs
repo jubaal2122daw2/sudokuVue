@@ -75,33 +75,8 @@ function contarPuntuacion(tiempo){
 
 console.table(sudokuRandom);
 
-
-/*crear constante indexed DB
-const indexedDB = window.indexedDB
-
-if(indexedDB){
-    let db
-    const request = indexedDB.open('sudoku', 1)
-    request.onsuccess = () => {
-        db = request.result
-        console.log('Base de datos abierta', db)
-    }
-
-    request.onupgradeneeded = () => {
-        db = request.result
-        console.log('Base de datos creada', db)
-        const objectStore = db.createObjectStore('sudokus')
-
-    }
-
-    request.onerror = (error) => {
-        console.log('Error', error)
-    } 
-    
-}*/
-
 /**
- * Guarda el sudoku en lel locvalStorage
+ * Guarda el sudoku en el localStorage
  */
 let almacen = {
   guardarSudoku: () => {

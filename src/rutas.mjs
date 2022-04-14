@@ -7,8 +7,8 @@ let tiempo = 0;
 
 let puntuaciones = [
   {
-    nombre: "",
-    puntuacion: 0,
+    nombre: "Default",
+    puntuacion: 100,
   }
 ];
 
@@ -55,19 +55,18 @@ const menusudoku = {
       if(this.interval == null){
         this.interval = setInterval(function () {
           tiempo++;
-          console.log(tiempo);
           document.getElementById("tiempo").innerHTML = `Tiempo: ${tiempo}`;
         }, 1000);
       }else{
         this.mostrarpuntuacion = !this.mostrarpuntuacion;
         puntuaciones.push({nombre: this.nombre, puntuacion: tiempo});
+        almacen.desar(puntuaciones);
         clearInterval(this.interval);
-        console.log("PUNTUACIONES",puntuaciones);
+        //console.log("PUNTUACIONES",puntuaciones);
         this.interval = null;
         tiempo = 0;
         
       }
-      console.log("interval: -> ", this.interval);
     },
   },
   template: `
@@ -136,5 +135,60 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+
+/**
+ * INDEXED
+ */
+
+let db;
+
+let almacen = {
+  desar: function(objeto) { 
+      var objectStore = db.transaction("Puntuaciones", "readwrite").objectStore("Puntuaciones");
+      objectStore.add(objeto);
+      almacen.mostrar(objectStore);
+  },
+  mostrar: function(objectStore){
+      objectStore.onsuccess = (e) => {
+          console.log("Puntuación: " + objectStore.result.nombre);
+      }
+  }
+}
+
+const DB_VERSION = 5;
+
+if (!window.indexedDB) {
+  window.alert("Su navegador no soporta una versión estable de indexedDB. Tal y como las características no serán validas");
+}
+
+let request = indexedDB.open("Sudoku", DB_VERSION);
+  
+request.onerror = function(event) {
+  alert("¡Problema!");
+};
+
+request.onsuccess = (e) =>{
+  db = e.target.result;
+}
+
+request.onupgradeneeded = function(event) {
+  let db = event.target.result;
+  try {
+      db.deleteObjectStore("Puntuaciones");
+  }
+  catch (e) {
+
+  }
+
+  let objectStore = db.createObjectStore("Puntuaciones", { autoIncrement : true });
+
+  objectStore.transaction.oncomplete = function(event) {
+    // Guarda los datos en el almacén recién creado.
+    for (let i in puntuaciones) {
+      objectStore.add(puntuaciones[i]);
+    }
+  }
+};
 
 export { router };
