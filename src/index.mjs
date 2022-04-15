@@ -4,16 +4,21 @@
 
 import { router } from "./rutas.mjs";
 import { copia, sudokuRandom, establecerDificultad } from "./main.mjs";
+import { Sudoku } from "./clases.mjs";
 
 /**
  * Componentes de sudoku: CeldaComponent, TableroComponent, FilaComponent
  */
 
- let tiempo = 0;
+let tiempo = 0;
 
- let puntuaciones = [];
- 
- let almacen = {
+let puntuaciones = [];
+
+/**
+ * Web Storage
+ */
+
+let almacen = {
   guardarPuntuacion: (puntuaciones) => {
     for (let i in puntuaciones) {
       localStorage.setItem(i, JSON.stringify(puntuaciones[i]));
@@ -27,7 +32,6 @@ import { copia, sudokuRandom, establecerDificultad } from "./main.mjs";
     };
   }
 }
- 
 
 Vue.component('CeldaComponent', {
   props: ['celda', 'x', 'y'],

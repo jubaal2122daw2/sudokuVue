@@ -6,7 +6,7 @@ import { Dificultad, Sudoku } from "./clases.mjs";
 let sudokuRandom = Sudoku.eleccionSudokuRandom();
 let copia = '';
 
-function establecerDificultad(evento){
+function establecerDificultad(evento) {
   console.log(evento.target.value)
   this.tablero = !this.tablero;
   let contador = 0;
@@ -15,23 +15,23 @@ function establecerDificultad(evento){
   let facil = new Dificultad("facil", 20);
   let medio = new Dificultad("medio", 40);
   let dificil = new Dificultad("dificil", 60);
-  switch(dif){
+  switch (dif) {
     case 'facil':
       contador = facil.getValorDificultad();
-      generarSudoku(contador,copia);
+      generarSudoku(contador, copia);
       break;
     case 'medio':
       contador = medio.getValorDificultad();
-      generarSudoku(contador,copia);
+      generarSudoku(contador, copia);
       break;
     case 'dificil':
       contador = dificil.getValorDificultad();
-      generarSudoku(contador,copia);
+      generarSudoku(contador, copia);
       break;
   }
 }
 
-function generarSudoku(contador, copia){
+function generarSudoku(contador, copia) {
   while (true) {
     for (let i = 0; i < copia.length; i++) {
       for (let j = 0; j < copia[i].length; j++) {
@@ -51,98 +51,82 @@ function numerosRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function recogerPuntuacion(sudokuRandom, copia){
-  if(sudokuRandom === copia){
+function recogerPuntuacion(sudokuRandom, copia) {
+  if (sudokuRandom === copia) {
     console.log("es igual")
     // contarPuntuacion(tiempo);
-  }else{
+  } else {
     console.log("es diferente");
   }
 }
 
-function contarPuntuacion(tiempo){
+function contarPuntuacion(tiempo) {
   //aqui la logica del indexed.
-  if(tiempo <= 480){
+  if (tiempo <= 480) {
     console.log("es bueno")
   }
-  else if (tiempo > 480 && tiempo <= 960){
+  else if (tiempo > 480 && tiempo <= 960) {
     console.log("es regular")
   }
-  else if (tiempo > 960){
+  else if (tiempo > 960) {
     console.log("es malo")
   }
 }
 
-console.table(sudokuRandom);
-
 /**
- * Guarda el sudoku en el localStorage
+ * IndexedDB
  */
-// let almacen = {
-//   guardarSudoku: () => {
-//     localStorage.setItem('Sudoku 1', Sudoku.sudokuResuelto1);
-//     localStorage.setItem('Sudoku 2', Sudoku.sudokuResuelto2);
-//     localStorage.setItem('Sudoku 3', Sudoku.sudokuResuelto3);
-//     almacen.mostrar();
-//   },
-//   mostrar: () => {
-//     for (var i = 0; i < localStorage.length; i++) {
-//       localStorage.key(i);
-//       localStorage.getItem(localStorage.key(i));
-//     };
-//   }
-// }
-// window.onload = function() {almacen.guardarSudoku()};
 
-// let db;
-// let almacen = {
-//   guardarSudoku: function (objeto) {
-//     var objectStore = db.transaction("Sudokus", "readwrite").objectStore("Sudokus");
-//     objectStore.add(objeto);
-//     almacen.mostrar(objectStore);
-//   },
-//   mostrar: function (objectStore) {
-//     objectStore.onsuccess = (e) => {
-//       console.log("Puntuación: " + objectStore.result.nombre);
-//     }
-//   }
-// }
+if (!window.indexedDB) {
+  alert("¡IndexedDB no es compatible!");
+}
 
-// const DB_VERSION = 5;
+const dbconnect = window.indexedDB.open('SudokusApp', 3);
+dbconnect.onupgradeneeded = ev => {
+  // console.log('Actualizar BD');
+  let db = ev.target.result;
+  try {
+    db.deleteObjectStore('Sudoku');
+  }
+  catch (e) {
 
-// if (!window.indexedDB) {
-//   window.alert("Su navegador no soporta una versión estable de indexedDB. Tal y como las características no serán validas");
-// }
+  }
 
-// let request = indexedDB.open("Sudoku", DB_VERSION);
+	/*const store = */db.createObjectStore('Sudoku', { /*keyPath: 'id',*/ autoIncrement: true });
+  // store.createIndex('Sudoku', 'Sudoku', { unique: true });
 
-// request.onerror = function (event) {
-//   alert("¡Problema!");
-// };
+}
+dbconnect.onsuccess = ev => {
+  // console.log('BD-Actualización exitosa');
+  const db = ev.target.result;
+  const transaction = db.transaction('Sudoku', 'readwrite');
+  const store = transaction.objectStore('Sudoku');
 
-// request.onsuccess = (e) => {
-//   db = e.target.result;
-// }
+  store.add(sudokuRandom);
+    // for (const sudoku of Sudoku.sudokus) {
+    //   store.add(sudoku);
+    // }
 
-// request.onupgradeneeded = function (event) {
-//   let db = event.target.result;
-//   try {
-//     db.deleteObjectStore("Puntuaciones");
-//   }
-//   catch (e) {
+  transaction.onerror = ev => {
+    // console.error('¡Se ha producido un error!', ev.target.error.message);
+  };
 
-//   }
+  transaction.oncomplete = ev => {
+    // console.log('¡Los datos se han añadido con éxito!');
+    const store = db.transaction('Sudoku', 'readonly').objectStore('Sudoku');
+    const query = store.openCursor()
+    query.onerror = ev => {
+      console.error('¡Solicitud fallida!', ev.target.error.message);
+    };
+    query.onsuccess = ev => {
+      const cursor = ev.target.result;
+      if (cursor) {
+        // console.log("FUNCIONA");
+      } else {
+        // console.log('¡No hay más registros disponibles!');
+      }
+    };
+  };
+};
 
-//   let objectStore = db.createObjectStore("Puntuaciones", { autoIncrement: true });
-
-//   objectStore.transaction.oncomplete = function (event) {
-//     // Guarda los datos en el almacén recién creado.
-//     for (let i in puntuaciones) {
-//       objectStore.add(puntuaciones[i]);
-//     }
-//   }
-// };
-
-// window.onload = function() {almacen.guardarSudoku()};
-
-export {copia, sudokuRandom, establecerDificultad, recogerPuntuacion};
+export { copia, sudokuRandom, establecerDificultad, recogerPuntuacion };
