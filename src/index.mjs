@@ -113,6 +113,7 @@ Vue.component('MenuSudokuComponent', {
       tablero: false,
       interval: null,
       mostrarpuntuacion: false,
+      disabled:false,
     };
   },
   methods: {
@@ -146,6 +147,9 @@ Vue.component('MenuSudokuComponent', {
 
       }
     },
+    warn: function warnDisabled() {
+      this.disabled = true
+    }
   },
   template: `
       <div class="flex-col grid gap-6">
@@ -154,9 +158,9 @@ Vue.component('MenuSudokuComponent', {
           <input id="nombre" placeholder="   Introduce tu nombre" type="text"
             class="shadow appearance-none border rounded ml-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
           <button class="bg-white ml-3 py-1 px-1 hover:bg-gray-100 text-gray-800 font-semibold border border-rose-400 rounded shadow dificultad"
-            v-on:click="registrarNombre">Guardar</button>
+            v-on:click="registrarNombre(); warn()">Guardar</button>
         </div>
-        <p class="justify-self-center -mt-4 -mb-4" v-show="guardado==true"> Hola {{nombre}}</p>
+        <p class="justify-self-center -mt-4 -mb-4 shake" v-show="guardado==true" v-if="disabled" > Hola {{nombre}}</p>
         <div class="flex justify-center">
           <button class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-rose-400 rounded shadow dificultad"
           value="facil"
